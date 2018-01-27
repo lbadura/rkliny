@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180125230514) do
+ActiveRecord::Schema.define(version: 20180127065521) do
 
   create_table "groups", id: false, force: :cascade, options: "TYPE=InnoDB" do |t|
     t.string "id", null: false
@@ -22,16 +22,58 @@ ActiveRecord::Schema.define(version: 20180125230514) do
     t.index ["id"], name: "index_groups_on_id", unique: true
   end
 
+  create_table "lessons", id: false, force: :cascade, options: "TYPE=InnoDB" do |t|
+    t.string "id", null: false
+    t.date "date", null: false
+    t.string "group_id", null: false
+    t.string "teacher_id", null: false
+    t.boolean "test", default: false
+    t.text "topic"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.text "homework"
+    t.index ["group_id"], name: "index_lessons_on_group_id"
+    t.index ["id"], name: "index_lessons_on_id", unique: true
+  end
+
   create_table "marks", id: false, force: :cascade, options: "TYPE=InnoDB" do |t|
     t.string "id", null: false
     t.string "group_id", null: false
     t.string "lesson_id", null: false
     t.string "teacher_id", null: false
     t.boolean "test", default: false
-    t.datetime "date"
+    t.date "date"
     t.integer "value", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "student_id", null: false
+    t.string "topic", null: false
+    t.index ["group_id"], name: "index_marks_on_group_id"
+    t.index ["id"], name: "index_marks_on_id", unique: true
+  end
+
+  create_table "students", id: false, force: :cascade, options: "TYPE=InnoDB" do |t|
+    t.string "id", null: false
+    t.string "group_id", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "office_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_students_on_group_id"
+    t.index ["id"], name: "index_students_on_id", unique: true
+  end
+
+  create_table "teachers", id: false, force: :cascade, options: "TYPE=InnoDB" do |t|
+    t.string "id", null: false
+    t.string "group_id", null: false
+    t.string "first_name", null: false
+    t.string "last_name", null: false
+    t.string "office_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_teachers_on_group_id"
+    t.index ["id"], name: "index_teachers_on_id", unique: true
   end
 
 end

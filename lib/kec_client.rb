@@ -9,6 +9,10 @@ class KecClient
     request("marks_by_group/#{group_id}/")
   end
 
+  def lessons(group_id)
+    request("lessons_by_group/#{group_id}/")
+  end
+
   def groups
     request('groups/')
   end
