@@ -2,11 +2,10 @@ namespace :kec do
   desc 'Fetches KEC groups'
   task groups: :environment do
     client = KecClient.new
-    ActiveRecord::Base.connection.execute("TRUNCATE #{Group.table_name}")
     # save groups
     client.groups.each do |json_data|
-      Group.new.tap do |g|
-        g.id = json_data['groupId']
+      group = Group.where(id: json_data['groupId']).first_or_initialize.tap do |g|
+        #g.id = json_data['groupId']
         g.name = json_data['name']
         g.book = json_data['book']
         g.branch_office_id = json_data['branchOffice']['branchOfficeId']
@@ -16,7 +15,7 @@ namespace :kec do
       # save students
       json_data['students'].each do |student_data|
         Student.where(id: student_data['studentId']).first_or_initialize.tap do |student|
-          student.id = student_data['studentId']
+          #student.id = student_data['studentId']
           student.group_id = json_data['groupId']
           student.first_name = student_data['user']['firstName']
           student.last_name = student_data['user']['lastName']
@@ -28,14 +27,15 @@ namespace :kec do
       # save teachers
       [json_data['firstTeacher'], json_data['secondTeacher']].each do |teacher_data|
         next if teacher_data.nil?
-        Teacher.where(id: teacher_data['teacherId']).first_or_initialize.tap do |teacher|
+        teacher = Teacher.where(id: teacher_data['teacherId']).first_or_initialize.tap do |teacher|
           teacher.id = teacher_data['teacherId']
-          teacher.group_id = json_data['groupId']
           teacher.first_name = teacher_data['user']['firstName']
           teacher.last_name = teacher_data['user']['lastName']
           teacher.office_id = teacher_data['branchOfficeName']
           teacher.save!
         end
+        teacher.groups << group
+        teacher.save!
       end
     end
   end

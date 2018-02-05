@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180127065521) do
+ActiveRecord::Schema.define(version: 20180127082828) do
+
+  create_table "group_teachers", force: :cascade, options: "TYPE=InnoDB AUTO_INCREMENT=515" do |t|
+    t.string "group_id"
+    t.string "teacher_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["group_id"], name: "index_group_teachers_on_group_id"
+    t.index ["teacher_id"], name: "index_group_teachers_on_teacher_id"
+  end
 
   create_table "groups", id: false, force: :cascade, options: "TYPE=InnoDB" do |t|
     t.string "id", null: false
@@ -66,14 +75,14 @@ ActiveRecord::Schema.define(version: 20180127065521) do
 
   create_table "teachers", id: false, force: :cascade, options: "TYPE=InnoDB" do |t|
     t.string "id", null: false
-    t.string "group_id", null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
     t.string "office_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["group_id"], name: "index_teachers_on_group_id"
     t.index ["id"], name: "index_teachers_on_id", unique: true
   end
 
+  add_foreign_key "group_teachers", "groups"
+  add_foreign_key "group_teachers", "teachers"
 end
